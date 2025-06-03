@@ -1,0 +1,40 @@
+
+name: CD
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: Deploy Solution
+    runs-on: ubuntu-latest
+
+    steps:
+        - name: Az Login
+          uses: azure/login@v2
+          with:
+            creds: '{"clientId":"${{ secrets.AZURE_CLIENT_ID }}","clientSecret":"${{ secrets.AZURE_CLIENT_SECRET }}","subscriptionId":"${{ secrets.AZURE_SUBSCRIPTION_ID }}","tenantId":"${{ secrets.AZURE_TENANT_ID }}"}' # These creds should be in JSON format, created from Azure CLI or Azure Portal
+        - name: Build and deploy Container App
+          uses: azure/container-apps-deploy-action@v1
+          with:
+            acrName: ${{ secrets.ACR_USERNAME }}
+            containerAppName: containerappuser12
+            resourceGroup: user12
+            imageToDeploy: microhackcrregistry.azurecr.io/xavi:latest
+        # - name: Get Latest Container Image Tag
+        #   id: get_tag
+        #   run: |
+        #       TAG=$(az acr repository show-tags --name microhackregistry --repository microhackapp --orderby time_desc --output tsv --detail | head -n 1 | awk '{print $4}')
+        #       NUMERIC_TAG=$(echo "$TAG" | grep -oE '[0-9]+')
+        #       INCREMENTED_TAG=$((NUMERIC_TAG + 1))
+        #       UPDATED_TAG=$(echo "$TAG" | sed "s/$NUMERIC_TAG/$INCREMENTED_TAG/")
+        #       echo "image_tag=$UPDATED_TAG" >> $GITHUB_OUTPUT
+        # - name: Build and deploy Container App
+        #   uses: azure/container-apps-deploy-action@v1
+        #   with:
+        #     appSourcePath: ${{ github.workspace }}/src
+        #     acrName: ${{ secrets.ACR_USERNAME }}
+        #     containerAppName: 
+        #     resourceGroup: user7
+
+        # Add additional deployment steps here
