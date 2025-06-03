@@ -29,8 +29,9 @@ jobs:
       #   with:
       #     name: .net-app
       #     path: ${{env.DOTNET_ROOT}}/myapp
-- name: Build and Push Image
-  run: |
-    az acr login --name microhackcrregistry --username ${{ secrets.ACR_USERNAME }} --password ${{ secrets.ACR_PASSWORD }} &&
-    docker build -t microhackcrregistry.azurecr.io/microhackapp:1 -f Dockerfile . &&
-    docker push microhackcrregistry.azurecr.io/microhackapp:1
+      - name: Build and Push Image
+        run: |
+          az acr login --name microhackcrregistry --username ${{ secrets.ACR_USERNAME }} --password ${{ secrets.ACR_PASSWORD }} &&
+          docker build -t microhackcrregistry.azurecr.io/xavi:latest -f dockerfile . &&
+          docker push microhackcrregistry.azurecr.io/xavi:latest
+
